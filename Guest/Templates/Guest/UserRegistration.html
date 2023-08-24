@@ -1,0 +1,177 @@
+{% extends 'Guest/Head.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data" id="userrform" data-place-url="{% url 'WebGuest:Ajax_Place' %}">
+        {% csrf_token %}
+        <table border="1" align="center">
+            <tr>
+                <td>Name</td>
+                <td>
+                    <input type="text" name="txtname" autocomplete="off" required="" onchange="nameval(this)">
+                    <span id="name"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+            <td>
+                <input type="text" name="txtnum" autocomplete="off" required="" onchange="checknum(this)">
+                <span id="contact"></span>
+            </td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>
+                    <input type="text" name="txtmail" autocomplete="off" required="" onchange="emailval(this)">
+                    <span id="content"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>
+                    <input type="radio" name="gender" value="Male">Male
+      			    <input type="radio" name="gender" value="Female">Female
+                </td>
+            </tr>
+            <tr>
+                <td>District</td>
+                <td align="center">
+                    <select name="sel_dis" id="district" required="">
+                        <option>--Select--</option>
+                        {% for i in DIS %}
+                        <option value="{{i.id}}">{{i.dis_name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Place</td>
+                <td align="center">
+                    <select name="sel_plc" id="place" required="">
+                        <option>--Select--</option>
+                        {% for i in PLA %}
+                        <option value="{{i.id}}">{{i.plc_name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>
+                    <textarea name="txtaddress" rows="6" cols="20"></textarea autocomplete="off" required="">
+                </td>
+            </tr>
+           
+            <tr>
+                <td>Password</td>
+                <td>
+                    <input type="password" name="txtpswd" autocomplete="off" required="">
+                </td>
+            </tr>
+            <tr>
+                <td>Conform Password</td>
+                <td>
+                    <input type="password" name="txtcnfrm" autocomplete="off" required="" onchange="chkpwd(this,txtpswd)">
+                    <span id="pass"></span>
+                </td>
+            </tr>        
+            <tr>
+                <td>Photo</td>
+                <td>
+                    <input type="file" name="txtphoto" autocomplete="off" required="">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" value="save" name="btn">
+                    <input type="reset" value="cancel" name="btn1">
+                </td>
+            </tr>
+
+        </table>
+    </form>
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#district").change(function () {
+        var did = $(this).val();
+        var ur = $("#userrform").attr("data-place-url");
+        $.ajax({
+            url: ur,
+            data: { disd: did, },
+            success: function (data) {
+                $("#place").html(data);
+            },
+        });
+    });
+
+    function chkpwd(txtrp, txtp)
+{
+if((txtrp.value)!=(txtp.value))
+{
+document.getElementById("pass").innerHTML = "<span style='color: red;'>Passwords Mismatch</span>";
+}
+}
+
+function checknum(elem)
+{
+var numericExpression = /^[0-9]{8,10}$/;
+if(elem.value.match(numericExpression))
+{
+document.getElementById("contact").innerHTML = "";
+return true;
+}
+else
+{
+document.getElementById("contact").innerHTML = "<span style='color: red;'>Numbers Only Allowed</span>";
+elem.focus();
+return false;
+}
+}
+
+
+
+function emailval(elem)
+{
+var emailexp=/^([a-zA-Z0-9.\_\-])+\@([a-zA-Z0-9.\_\-])+\.([a-zA-Z]{2,4})$/;
+if(elem.value.match(emailexp))
+{
+document.getElementById("content").innerHTML = "";
+return true;
+}
+else
+{
+
+document.getElementById("content").innerHTML ="<span style='color: red;'>Check Email Address Entered</span>";;
+elem.focus();
+return false;
+}
+}
+function nameval(elem)
+{
+var emailexp=/^([A-Za-z ]*)$/;
+if(elem.value.match(emailexp))
+{
+document.getElementById("name").innerHTML = "";
+return true;
+}
+else
+{
+
+document.getElementById("name").innerHTML = "<span style='color: red;'>Alphabets Are Allowed</span>";
+elem.focus();
+return false;
+}
+}
+
+</script>
+{% endblock content %}

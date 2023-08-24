@@ -1,0 +1,27 @@
+<table align="center" cellpadding="50" style="border-collapse: collapse">
+    <tr>
+        {% for i in product %}
+
+        <td>
+            <div style="text-align:center;border:1px solid black;margin:22px;padding:20px">
+
+                <p><img src="{{i.prdct_image.url}}" width="100px" height="100px" /></p>
+                <br>
+                <p>{{i.prdct_name}}</p>
+                <br>
+                <p>{{i.prdct_rate}}</p>
+                <br>
+                <p>{{i.prdct_details}}</p>
+                <br>
+                <p><a href="{% url 'WebUser:addtocart' i.id %}"  style="color: red;">Add To Cart</a></p>
+                <br>
+            </div>
+        </td>
+        {% if forloop.counter|divisibleby:4 %}
+    </tr>
+    <tr>
+        {% endif %}
+
+
+        {% endfor %}
+</table>

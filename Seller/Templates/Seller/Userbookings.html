@@ -1,0 +1,53 @@
+{% extends 'Seller/Head.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post">
+        <table align="center" border="1">
+            <tr>
+                <th>Sl.No</th>
+                <th>Product</th>
+                <th>Details</th>
+                <th>Rate</th>
+                <th>Photo</th>
+                <th>User</th>
+                <th>Contact Info</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for i in data %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{i.product.prdct_name}}</td>
+                <td>{{i.product.prdct_details}}</td>
+                <td>{{i.product.prdct_rate}}</td>
+                <td><img src="{{i.product.prdct_image.url}}" alt="" width="150" height="150"></td>
+                <td>{{i.booking.user.usrname}}</td>
+                <td>{{i.booking.user.usrcontact}}</td>
+                <td>{% if i.booking.booking_status == 1 %}
+                    <p>Booking Completed | <a href="{% url 'WebSeller:acceptorder' i.booking.id %}" style="color: red;">Accept</a> | <a href="{% url 'WebSeller:rejectorder' i.booking.id %}" style="color: red;">Reject</a> </p>
+                    {% elif i.booking.booking_status == 2 %} 
+                    <p>Order Accepted | <a href="{% url 'WebSeller:deliverorder' i.booking.id %}" style="color: red;">Delivered</a> </p>
+                    {% elif i.booking.booking_status == 3 %}
+                    <p>Order Delivered </p>
+                    {% else  %}
+                    <p>Pending</p>
+                    {% endif %}
+                    
+                </td>
+                <td><a href="{% url 'WebSeller:removeqtys' i.id %}" style="color: red;">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </form>
+</body>
+</html>
+{% endblock content %}

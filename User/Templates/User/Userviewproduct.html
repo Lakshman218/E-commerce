@@ -1,0 +1,102 @@
+{% extends 'User/Head.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post" id="sllrprdtform" data-subc-url="{% url 'WebSeller:Ajax_subc' %}" data-product-url="{% url 'WebUser:ajax-product' %}">
+    <table border="1" align="center" cellpadding="10">
+        <tr>
+            <td>Category</td>
+            <td align="center">
+                <select name="sel_cat" id="Category">
+                    <option value="">--Select--</option>
+                    {% for i in CAT %}
+                    <option value="{{i.id}}">{{i.cat_name}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        
+            <td>Subcategory</td>
+            <td align="center">
+                <select name="sel_sub" id="Subcategory">
+                    <option value="">--Select--</option>
+                                   </select>
+            </td>
+        </tr>
+    </table>
+    <table align="center" cellpadding="50" style="border-collapse: collapse" id="result">
+        <tr>
+            {% for i in product %}
+
+            <td>
+                <div style="text-align:center;border:1px solid black;margin:22px;padding:20px">
+
+                    <p><img src="{{i.prdct_image.url}}" width="100px" height="100px" /></p>
+                    <br>
+                    <p>{{i.prdct_name}}</p>
+                    <br>
+                    <p>{{i.prdct_rate}}</p>
+                    <br>
+                    <p>{{i.prdct_details}}</p>
+                    <br>
+                    <p><a href="{% url 'WebUser:addtocart' i.id %}"  style="color: red;">Add To Cart</a></p>
+                    <br>
+                </div>
+            </td>
+            {% if forloop.counter|divisibleby:4 %}
+        </tr>
+        <tr>
+            {% endif %}
+
+
+            {% endfor %}
+    </table>
+
+</body>
+</html>
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#Category").change(function () {
+        var cid = $(this).val();
+        var sid=document.getElementById("Subcategory").value;
+        var ur = $("#sllrprdtform").attr("data-subc-url");
+        $.ajax({
+            url: ur,
+            data: { cate: cid, },
+            success: function (data) {
+                $("#Subcategory").html(data);
+                var ur = $("#sllrprdtform").attr("data-product-url");
+        $.ajax({
+            url: ur,
+            data: { sid: sid,cid:cid },
+            success: function (data) {
+                $("#result").html(data);
+            },
+        });
+            },
+        });
+    });
+
+    $("#Subcategory").change(function () {
+        var sid = $(this).val();
+        var cid=document.getElementById("Category").value;
+        var ur = $("#sllrprdtform").attr("data-product-url");
+        $.ajax({
+            url: ur,
+            data: { cid: cid,sid:sid },
+            success: function (data) {
+                $("#result").html(data);
+            },
+        });
+    });
+</script>
+{% endblock content %}

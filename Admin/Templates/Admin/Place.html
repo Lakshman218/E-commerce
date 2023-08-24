@@ -1,0 +1,70 @@
+{% extends 'Admin/Head.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <table border="1" align="center">
+            <tr>
+                <td>District</td>
+                <td align="center">
+                    <select name="sel_district">
+                        <option>--Select--</option>
+                        {% for i in viewdis %}
+                        <option value="{{i.id}}">{{i.dis_name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Place</td>
+                <td>
+                    <input type="text" name="txtplace" value="{{editplace.plc_name}}" autocomplete="off" required="">
+                </td>
+            </tr>
+            <tr>
+                <td>Pincode</td>
+                <td>
+                    <input type="text" name="txtpin" value="{{editplace.plc_pincode}}" autocomplete="off" required="">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" name="btn1" value="submit">
+                    <input type="reset" name="btn2" value="Reset">
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table border="1" align="center">
+            <tr>
+                <td>Sl.No</td>
+                <td>District</td>
+                <td>Place</td>
+                <td>Pincode</td>
+                <td>Action</td>
+            </tr>
+            {% for i in viewplc %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{i.district.dis_name}}</td>
+                <td>{{i.plc_name}}</td>
+                <td>{{i.plc_pincode}}</td>
+                <td><a href="{% url 'WebAdmin:deleteplace' i.id %}">Delete</a></td>
+                <td><a href="{% url 'WebAdmin:editplace' i.id %}">Edit</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </form>
+</body>
+</html>
+
+{% endblock content %}
